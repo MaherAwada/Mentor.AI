@@ -1,5 +1,7 @@
-import BibliotecaScreen from "../src/screens/BibliotecaScreens";
+import WelcomeScreen from "./WelcomeScreen";
+
 
 export default function Page() {
-  return <BibliotecaScreen />;
+ 
+  return <WelcomeScreen />;
 }
