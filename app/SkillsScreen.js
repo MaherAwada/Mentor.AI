@@ -1,177 +1,162 @@
-import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { router } from 'expo-router'; // Mantido para navegação
 import { useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-
-
-const ALL_SKILLS = [
-  'Comunicação',
-  'Organização',
-  'Pensamento analítico',
-  'Aprendizado rápido',
-  'Trabalho em equipe',
-];
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function SkillsScreen() {
   const [selectedSkills, setSelectedSkills] = useState([]);
-  const colorScheme = useColorScheme() ?? 'light';
-  const isDark = colorScheme === 'dark';
+  
+  // Lista de habilidades do snippet fornecido
+  const skills = [
+    "Comunicação",
+    "Pensamento analítico",
+    "Organização",
+    "Aprendizado rápido",
+    "Trabalho em equipe",
+  ];
 
   const toggleSkill = (skill) => {
-    setSelectedSkills((currentSkills) => {
-      if (currentSkills.includes(skill)) {
-        // Remove a habilidade se já estiver selecionada
-        return currentSkills.filter((s) => s !== skill);
-      } else if (currentSkills.length < 3) {
-        // Adiciona a habilidade, limitando a 3
-        return [...currentSkills, skill];
-      }
-      return currentSkills;
-    });
+    if (selectedSkills.includes(skill)) {
+      setSelectedSkills(selectedSkills.filter((s) => s !== skill));
+    } else if (selectedSkills.length < 3) {
+      setSelectedSkills([...selectedSkills, skill]);
+    }
   };
 
-  const isSelected = (skill) => selectedSkills.includes(skill);
-
+  // Lógica de navegação mantida da sua implementação anterior
   const handleGetRecommendations = () => {
     if (selectedSkills.length < 2) {
       alert('Por favor, selecione 2 ou 3 habilidades.');
       return;
     }
     console.log('Skills selecionadas:', selectedSkills);
-    // Aqui você adicionaria a lógica de navegação para a próxima tela de resultados/recomendações.
-    // Ex: router.push('/recommendations', { skills: selectedSkills });
-  };
-
-  const renderSkillButton = (skill) => {
-    const selected = isSelected(skill);
     
-    // Define cores com base no tema e seleção, imitando o estilo da imagem (azul forte para selecionado, branco para não selecionado)
-    const buttonStyle = {
-      ...styles.skillButton,
-      backgroundColor: selected ? '#187498' : Colors[colorScheme].background,
-      borderColor: selected ? '#187498' : '#ccc',
-    };
-
-    const textStyle = {
-      ...styles.skillText,
-      color: selected ? '#fff' : Colors[colorScheme].text,
-    };
-
-    return (
-      <TouchableOpacity
-        key={skill}
-        style={buttonStyle}
-        onPress={() => toggleSkill(skill)}
-        activeOpacity={0.7}
-      >
-        <ThemedText style={textStyle}>{skill}</ThemedText>
-      </TouchableOpacity>
-    );
+    // Navega para a terceira tela
+    router.replace('/LibraryScreen');
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         
-        {/* Título e Subtítulos */}
-        <ThemedText style={styles.smallTitle}>
-          Seu objetivo: Recolocação
-        </ThemedText>
-        <ThemedText type="title" style={styles.mainTitle}>
-          Quais habilidades você mais se destacam em você?
-        </ThemedText>
-        <ThemedText style={styles.subtitle}>
-          Selecione 2 ou 3 habilidades.
-        </ThemedText>
+        {/* Bloco de cabeçalho */}
+        <View style={styles.header}>
+          <Text style={styles.subtitleHeader}>Seu objetivo: Recolocação</Text>
+          <Text style={styles.title}>
+            Quais habilidades mais se destacam em você?
+          </Text>
+          <Text style={styles.subtitleDescription}>Selecione 2 ou 3 habilidades.</Text>
+        </View>
 
-        {/* Botões de Habilidades */}
-        <View style={styles.skillsContainer}>
-          {ALL_SKILLS.map(renderSkillButton)}
+        {/* Grid de Habilidades */}
+        <View style={styles.skillsGrid}>
+          {skills.map((skill, index) => {
+            const isSelected = selectedSkills.includes(skill);
+            return (
+              <TouchableOpacity
+                key={`${skill}-${index}`}
+                onPress={() => toggleSkill(skill)}
+                style={[
+                  styles.skillButton,
+                  isSelected ? styles.skillButtonSelected : styles.skillButtonUnselected,
+                ]}
+              >
+                <Text style={[styles.skillText, isSelected && styles.skillTextSelected]}>
+                  {skill}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* Botão de Ação */}
         <TouchableOpacity
-          style={[
-            styles.actionButton,
-            { opacity: selectedSkills.length >= 2 ? 1 : 0.5 },
-          ]}
           onPress={handleGetRecommendations}
+          style={[styles.submitButton, selectedSkills.length < 2 && styles.submitButtonDisabled]}
           disabled={selectedSkills.length < 2}
         >
-          <ThemedText style={styles.actionButtonText}>
-            Receber Minhas Recomendações
-          </ThemedText>
+          <Text style={styles.submitButtonText}>Receber Minhas Recomendações</Text>
         </TouchableOpacity>
-
+        
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+// Novos estilos baseados no snippet
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: '#F3F4F6', // Cor de fundo principal
   },
   container: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    paddingBottom: 32,
-    backgroundColor: '#E6F4FE', // Cor de fundo da imagem "tela2.jpg"
+    padding: 24,
   },
-  smallTitle: {
-    fontSize: 14,
-    color: '#7a7f87', // Cor similar ao cinza da imagem
-    marginBottom: 8,
+  header: {
+    marginBottom: 32,
   },
-  mainTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    marginBottom: 10,
+  subtitleHeader: {
+    fontSize: 14, // Ajustado para ser menor que o subtitleDescription
+    color: '#6B7280', 
+    marginBottom: 4,
   },
   title: {
-
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#0a2540',
+    lineHeight: 36,
+    marginBottom: 8,
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#6b7280',
-    marginBottom: 40,
+  subtitleDescription: {
+    fontSize: 18,
+    color: '#6B7280', 
+    marginBottom: 8,
   },
-  skillsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 15, // Espaçamento entre os botões
-    marginBottom: 40,
+  skillsGrid: {
     width: '100%',
+    marginBottom: 24,
+    // Alterado para 'flex-start' para alinhar os botões à esquerda (como na tela original)
+    flexDirection: 'row', 
+    flexWrap: 'wrap',
+    gap: 12, // Adiciona espaço entre os itens
   },
   skillButton: {
-    borderRadius: 50,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    // Cor de fundo e borda são definidos no componente com base na seleção
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    paddingVertical: 12, // Ajustado para ser menos alto
+    paddingHorizontal: 24,
+    borderRadius: 9999, // Arredondado
+    borderWidth: 2,
+    alignItems: 'center',
+    // Removido marginBottom para usar 'gap' no skillsGrid
+  },
+  skillButtonSelected: {
+    backgroundColor: '#1E90FF',
+    borderColor: '#1E90FF',
+  },
+  skillButtonUnselected: {
+    backgroundColor: 'white',
+    borderColor: '#D1D5DB', 
   },
   skillText: {
     fontSize: 16,
     fontWeight: '600',
-    // Cor do texto é definida no componente com base na seleção
+    color: '#0a2540',
   },
-  actionButton: {
-    backgroundColor: '#187498', // Azul forte para o botão de ação
-    borderRadius: 50,
-    paddingVertical: 18,
-    width: '100%',
+  skillTextSelected: {
+    color: 'white',
+  },
+  submitButton: {
+    backgroundColor: '#1E90FF',
+    paddingVertical: 20,
+    borderRadius: 9999,
     alignItems: 'center',
+    marginTop: 20,
   },
-  actionButtonText: {
-    color: '#fff',
+  submitButtonDisabled: {
+    backgroundColor: '#A0A0A0',
+  },
+  submitButtonText: {
+    color: 'white',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '600',
   },
 });

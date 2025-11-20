@@ -1,6 +1,6 @@
-import { ThemedText } from '@/components/themed-text'; // Para usar os estilos do tema
-import { IconSymbol } from '@/components/ui/icon-symbol'; // Usaremos o IconSymbol
-import { router } from 'expo-router';
+import { ThemedText } from '@/components/themed-text';
+import { IconSymbol } from '@/components/ui/icon-symbol';
+import { router } from 'expo-router'; // IMPORTANTE: Módulo de roteamento
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 // Definição dos botões de objetivo
@@ -12,18 +12,18 @@ const objectives = [
 ];
 
 export default function WelcomeScreen() {
+  
+  // Função de navegação corrigida
   const handleSelectObjective = (objective) => {
     console.log('Objective selected:', objective);
     
-    // --- NOVO CÓDIGO DE NAVEGAÇÃO ---
-    // Usa o router.push para navegar para a próxima tela
+    // Navega para a segunda tela, passando o objetivo selecionado
     router.push({
-      // O nome do arquivo da segunda tela (sem a extensão .js)
+      // Rota de destino
       pathname: '/SkillsScreen', 
-      // Passamos o objetivo selecionado para a próxima tela, se necessário
+      // Parâmetros a serem passados
       params: { objective: objective }, 
     });
-    // ---------------------------------
   };
 
   
@@ -40,10 +40,7 @@ export default function WelcomeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         
-        {/* Ícone (no seu caso, a imagem de cérebro/lâmpada) */}
-        {/* Se você tiver a imagem como um asset, use:
-        <Image source={require('@/assets/images/seu-icone-cerebro.png')} style={styles.headerImage} />
-        Caso contrário, usamos o IconSymbol como um placeholder conceitual */}
+        {/* Ícone */}
         {renderHeaderIcon()}
 
 
@@ -91,7 +88,6 @@ const styles = StyleSheet.create({
   headerIcon: {
     marginBottom: 20,
     marginTop: 50, // Ajuste para descer um pouco
-    // Nota: O Expo Symbols "brain.head.profile" só está disponível no iOS, no Android será um fallback do MaterialIcons
   },
   welcomeTitle: {
     fontSize: 24,
