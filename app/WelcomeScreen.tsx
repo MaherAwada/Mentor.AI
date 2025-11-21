@@ -1,10 +1,11 @@
 import { ThemedText } from '@/components/themed-text';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { router } from 'expo-router'; // IMPORTANTE: Módulo de roteamento
+import { router } from 'expo-router'; // Módulo de roteamento
+import React from 'react'; // Adicionado para conformidade com TSX
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-// Definição dos botões de objetivo
-const objectives = [
+// Definição dos botões de objetivo (Opcional: tipar o array como string[])
+const objectives: string[] = [ 
   'Primeiro emprego',
   'Recolocação',
   'Transição de carreira',
@@ -13,8 +14,8 @@ const objectives = [
 
 export default function WelcomeScreen() {
   
-  // Função de navegação corrigida
-  const handleSelectObjective = (objective) => {
+  // Função de navegação corrigida com tipagem
+  const handleSelectObjective = (objective: string) => { // <--- ARGUMENTO TIPADO
     console.log('Objective selected:', objective);
     
     // Navega para a segunda tela, passando o objetivo selecionado

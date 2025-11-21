@@ -1,8 +1,9 @@
-/* desativado 
-import { useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { router } from 'expo-router'; // Importar o roteador
+import React, { useState } from "react";
+import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function PerfilScreen() {
+// Usaremos SkillsScreen como nome para manter a rota /SkillsScreen funcionando.
+export default function SkillsScreen() {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
 
   const skills = [
@@ -18,18 +19,34 @@ export default function PerfilScreen() {
       setSelectedSkills(selectedSkills.filter((s) => s !== skill));
     } else if (selectedSkills.length < 3) {
       setSelectedSkills([...selectedSkills, skill]);
+    } else {
+      // Opcional: Avisar o usuário se ele tentar selecionar mais de 3
+      Alert.alert("Limite Atingido", "Você pode selecionar no máximo 3 habilidades.");
     }
+  };
+  
+  // Implementação da navegação
+  const handleGetRecommendations = () => {
+    if (selectedSkills.length < 2) {
+      Alert.alert('Atenção', 'Por favor, selecione 2 ou 3 habilidades.');
+      return;
+    }
+    
+    console.log('Skills selecionadas:', selectedSkills);
+    
+    // Navega para a Tela 3 (Biblioteca)
+    router.replace('/LibraryScreen'); 
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.subtitle}>Seu objetivo: Recolocação</Text>
+          <Text style={styles.subtitleHeader}>Seu objetivo: Recolocação</Text>
           <Text style={styles.title}>
             Quais habilidades mais se destacam em você?
           </Text>
-          <Text style={styles.subtitle}>Selecione 2 ou 3 habilidades.</Text>
+          <Text style={styles.subtitleDescription}>Selecione 2 ou 3 habilidades.</Text>
         </View>
 
         <View style={styles.skillsGrid}>
@@ -53,6 +70,7 @@ export default function PerfilScreen() {
         </View>
 
         <TouchableOpacity
+          onPress={handleGetRecommendations} // Chamada para a função de navegação
           style={[styles.submitButton, selectedSkills.length < 2 && styles.submitButtonDisabled]}
           disabled={selectedSkills.length < 2}
         >
@@ -76,10 +94,10 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 32,
   },
-  subtitle: {
-    fontSize: 18,
+  subtitleHeader: {
+    fontSize: 14, 
     color: '#6B7280', // gray-500
-    marginBottom: 8,
+    marginBottom: 4,
   },
   title: {
     fontSize: 30,
@@ -88,17 +106,25 @@ const styles = StyleSheet.create({
     lineHeight: 36,
     marginBottom: 8,
   },
+  subtitleDescription: {
+    fontSize: 18,
+    color: '#6B7280', 
+    marginBottom: 8,
+  },
   skillsGrid: {
     width: '100%',
     marginBottom: 24,
+    flexDirection: 'row', 
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'flex-start', // Alinha botões à esquerda
   },
   skillButton: {
-    paddingVertical: 18,
+    paddingVertical: 12, 
     paddingHorizontal: 24,
-    borderRadius: 9999, // rounded-full
+    borderRadius: 9999, 
     borderWidth: 2,
     alignItems: 'center',
-    marginBottom: 12,
   },
   skillButtonSelected: {
     backgroundColor: '#1E90FF',
@@ -106,7 +132,7 @@ const styles = StyleSheet.create({
   },
   skillButtonUnselected: {
     backgroundColor: 'white',
-    borderColor: '#D1D5DB', // border-gray-300
+    borderColor: '#D1D5DB', 
   },
   skillText: {
     fontSize: 16,
@@ -123,7 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitButtonDisabled: {
-    backgroundColor: '#A0A0A0', // A gray color for disabled state
+    backgroundColor: '#A0A0A0', 
   },
   submitButtonText: {
     color: 'white',
@@ -131,5 +157,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
-*/
